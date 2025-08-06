@@ -14,7 +14,16 @@ public class ActionDTO {
     private Long projetId;
     private Integer priority;
     private String description;
+    private Long userId;
  
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getDescription() {
         return description;

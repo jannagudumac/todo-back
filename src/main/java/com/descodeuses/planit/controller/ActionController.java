@@ -41,16 +41,7 @@ public class ActionController {
         this.service = service;
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> Hello() {
-
-        ArrayList<Integer> liste = new ArrayList<Integer>();
-        liste.add(21);
-        liste.add(22);
-        liste.add(23);
-
-        return new ResponseEntity<>("Hello", HttpStatus.OK);
-    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<ActionDTO> getById(@PathVariable Long id) {
