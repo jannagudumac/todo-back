@@ -1,5 +1,6 @@
 package com.descodeuses.planit.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.descodeuses.planit.security.JwtUtil;
+import com.descodeuses.planit.service.LogDocumentService;
 import com.descodeuses.planit.service.UserService;
 import com.descodeuses.planit.dto.AuthRequest;
 import com.descodeuses.planit.dto.AuthResponse;
+import com.descodeuses.planit.entity.LogDocument;
 import com.descodeuses.planit.entity.UtilisateurEntity;
 
 @RestController
@@ -40,6 +43,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+	private LogDocumentService logService;
+
     @GetMapping("/hello")
     public ResponseEntity<String> Hello() {
 
@@ -50,9 +56,14 @@ public class AuthController {
 
         return new ResponseEntity<>("Hello", HttpStatus.OK);
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+
+        LogDocument entry = new LogDocument();
+        entry.setTimestamp(LocalDateTime.now());
+        entry.setText("Login called");
+        this.logService.addLog(entry);
         try {
             // 1. Authenticate user
             authenticationManager.authenticate(
