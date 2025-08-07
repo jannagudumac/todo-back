@@ -52,23 +52,13 @@ public class ActionController {
     @GetMapping
     // public List<ActionDTO> getAll() {
     public ResponseEntity<List<ActionDTO>> getAll() {
-        /*
-         * Action action1 = new Action();
-         * action1.setTitle("Enovyer un mail");
-         * 
-         * Action action2 = new Action();
-         * action2.setTitle("Appel telephoniquel");
-         * 
-         * ArrayList<Action> list = new ArrayList<>();
-         * list.add(action1);
-         * list.add(action2);
-         */
 
         // ResponseEntity
         List<ActionDTO> items = service.getAll();
         return new ResponseEntity<>(items, HttpStatus.OK);
         // return items;
     }
+    
 
     @PostMapping
     public ResponseEntity<ActionDTO> create(@RequestBody ActionDTO requestDTO) {

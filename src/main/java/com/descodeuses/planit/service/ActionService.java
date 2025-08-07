@@ -82,7 +82,7 @@ public class ActionService {
         return action;
     }
 
-    public List<ActionDTO> getAll() {
+    /* public List<ActionDTO> getAll() {
         List<ActionEntity> entities = repository.findAll();
         // Declarer une variable liste de action DTO
         List<ActionDTO> dtos = new ArrayList<>();
@@ -94,7 +94,30 @@ public class ActionService {
             dtos.add(convertToDTO(item));
         }
         return dtos;
+    } */
+
+    public List<ActionDTO> getAll() {
+    // 1. Get authenticated username
+    UserDetails userDetails = 
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+
+    // 2. Load full user entity
+    UtilisateurEntity user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+
+    // 3. Get actions for this user only
+    List<ActionEntity> userActions = repository.findByUser(user);
+
+    // 4. Convert to DTOs
+    List<ActionDTO> dtos = new ArrayList<>();
+    for (ActionEntity action : userActions) {
+        dtos.add(convertToDTO(action));
     }
+
+    return dtos;
+}
+
 
     public ActionDTO getActionById(Long id) {
         // Version courte
