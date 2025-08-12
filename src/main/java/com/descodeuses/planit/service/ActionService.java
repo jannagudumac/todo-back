@@ -120,16 +120,6 @@ public class ActionService {
 
 
     public ActionDTO getActionById(Long id) {
-        // Version courte
-        /*
-         * Action action =
-         * repository
-         * .findById(id)
-         * .orElseThrow(() -> new EntityNotFoundException("Action not found with id: " +
-         * id));
-         * 
-         * return convertToDTO(action);
-         */
 
         // Version longue explicite
         Optional<ActionEntity> action = repository.findById(id);
@@ -138,15 +128,6 @@ public class ActionService {
             throw new EntityNotFoundException("Action not found with id: " + id);
         }
         ActionEntity entity = action.get();
-        /*
-         * ActionDTO dto = convertToDTO(entity);
-         * Set<Long> ids = entity.getMembers()
-         * .stream()
-         * .map(ContactEntity::getId)
-         * .collect(Collectors.toSet());
-         * entity.setMembers(entity.getMembers());
-         */
-
         return convertToDTO(entity);
     }
 

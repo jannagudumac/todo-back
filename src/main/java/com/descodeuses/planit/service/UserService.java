@@ -1,4 +1,7 @@
 
+
+
+
 package com.descodeuses.planit.service;
 
 import com.descodeuses.planit.repository.UserRepository;
@@ -10,6 +13,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+
+import com.descodeuses.planit.dto.RegisterRequest;
+
+@Service
+public class UserService  {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public UtilisateurEntity registerUser(RegisterRequest request) throws Exception {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new Exception("User already exists.");  // username already exists
+        }
+
+        UtilisateurEntity user = new UtilisateurEntity();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole("user");
+
+        return userRepository.save(user);
+    }
+}
+
+
+/* 
 @Service
 public class UserService  {
 
@@ -34,3 +65,4 @@ public class UserService  {
         return user;
     }
 }
+*/

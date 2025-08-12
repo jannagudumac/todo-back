@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ import com.descodeuses.planit.service.LogDocumentService;
 import com.descodeuses.planit.service.UserService;
 import com.descodeuses.planit.dto.AuthRequest;
 import com.descodeuses.planit.dto.AuthResponse;
+import com.descodeuses.planit.dto.RegisterRequest;
 import com.descodeuses.planit.entity.LogDocument;
 import com.descodeuses.planit.entity.UtilisateurEntity;
 
@@ -66,8 +69,14 @@ public class AuthController {
         this.logService.addLog(entry);
         try {
             // 1. Authenticate user
-            authenticationManager.authenticate(
+            Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            String role="";
+            if(auth != null){
+                for(GrantedAuthority authority : auth.getAuthorities()){
+                    role = authority.getAuthority();
+                }
+            }
 
             // 2. Load user details
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
@@ -76,7 +85,7 @@ public class AuthController {
             String token = jwtUtil.generateToken(userDetails);
 
             // 4. Return response
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(token, role));
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Invalid username or password");
@@ -85,9 +94,25 @@ public class AuthController {
         }
     }
 
-
-
     @PostMapping("/signup")
+public ResponseEntity<?> signup(@RequestBody RegisterRequest request) {
+    try {
+        UtilisateurEntity registeredUser = userService.registerUser(request);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        response.put("username", registeredUser.getUsername());
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+}
+
+
+
+
+    /* @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UtilisateurEntity utilisateurEntity) {
         try {
             UtilisateurEntity registeredUser = userService.registerUser(utilisateurEntity);
@@ -100,7 +125,7 @@ public class AuthController {
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
-    }
+    } */
 
 }
 

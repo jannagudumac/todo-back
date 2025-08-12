@@ -23,25 +23,9 @@ public class ActionController {
 
     private final ActionService service;
 
-    // La dependency injection (DI)
-    // tu ne crées pas toi-même les objets dont une classe a besoin
-    // On te les injecte de l’extérieur
-
-    // Constructeur
-    // Recoit le service
-    // Comme c'est un service donc il est injectable
-
-    // Tous les injectable sont recu par principe
-    // depuis le constructeur
-
-    // Quand tu injectes par constructeur
-    // les dépendances sont obligatoires dès le départ
-    // donc le code est plus sûr
     public ActionController(ActionService service) {
         this.service = service;
     }
-
-    
 
     @GetMapping("/{id}")
     public ResponseEntity<ActionDTO> getById(@PathVariable Long id) {
@@ -58,7 +42,6 @@ public class ActionController {
         return new ResponseEntity<>(items, HttpStatus.OK);
         // return items;
     }
-    
 
     @PostMapping
     public ResponseEntity<ActionDTO> create(@RequestBody ActionDTO requestDTO) {
@@ -77,6 +60,4 @@ public class ActionController {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }
