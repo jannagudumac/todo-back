@@ -7,6 +7,9 @@ package com.descodeuses.planit.service;
 import com.descodeuses.planit.repository.UserRepository;
 
 import com.descodeuses.planit.entity.UtilisateurEntity; // if DCUser is your entity
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,6 +40,23 @@ public class UserService  {
 
         return userRepository.save(user);
     }
+
+    public List<UtilisateurEntity> getAllUsers() {
+        return userRepository.findByRole("user");
+    }
+
+
+    public boolean deleteUser(Long id) {
+    if (userRepository.existsById(id)) {
+        userRepository.deleteById(id);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
 }
 
 
