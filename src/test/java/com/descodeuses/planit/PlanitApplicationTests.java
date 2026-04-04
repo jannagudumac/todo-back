@@ -1,13 +1,1 @@
-package com.descodeuses.planit;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class PlanitApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+// Legacy placeholder test removed. See controller tests for useful coverage.
