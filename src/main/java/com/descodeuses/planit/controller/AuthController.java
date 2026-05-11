@@ -63,10 +63,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
 
-        LogDocument entry = new LogDocument();
-        entry.setTimestamp(LocalDateTime.now());
-        entry.setText("Login called");
-        this.logService.addLog(entry);
+        try {
+            LogDocument entry = new LogDocument();
+            entry.setTimestamp(LocalDateTime.now());
+            entry.setText("Login called");
+            this.logService.addLog(entry);
+        } catch (Exception ignored) {}
         try {
             // 1. Authenticate user
             Authentication auth = authenticationManager.authenticate(
