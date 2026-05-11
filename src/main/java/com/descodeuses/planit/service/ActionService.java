@@ -3,7 +3,6 @@ package com.descodeuses.planit.service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,7 @@ import com.descodeuses.planit.repository.ProjetRepository;
 import com.descodeuses.planit.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 @Service
 public class ActionService {
@@ -39,6 +39,23 @@ public class ActionService {
         this.repository = repository;
         this.contactRepository = contactRepository;
         this.projetRepository = projetRepository;
+    }
+
+    private String getCurrentUsername() {
+        UserDetails userDetails =
+            (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
+
+    private boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private void checkOwnership(ActionEntity entity) {
+        if (!isAdmin() && !entity.getUser().getUsername().equals(getCurrentUsername())) {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     private ActionDTO convertToDTO(ActionEntity action) {
@@ -120,14 +137,10 @@ public class ActionService {
 
 
     public ActionDTO getActionById(Long id) {
+        ActionEntity entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Action not found with id: " + id));
 
-        // Version longue explicite
-        Optional<ActionEntity> action = repository.findById(id);
-
-        if (action.isEmpty()) {
-            throw new EntityNotFoundException("Action not found with id: " + id);
-        }
-        ActionEntity entity = action.get();
+        checkOwnership(entity);
         return convertToDTO(entity);
     }
 
@@ -167,6 +180,8 @@ public class ActionService {
         ActionEntity existingEntity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Action not found with id: " + id));
 
+        checkOwnership(existingEntity);
+
         // Mettre à jour les champs de l'entité avec les valeurs du DTO
         existingEntity.setTitle(dto.getTitle());
         existingEntity.setCompleted(dto.getCompleted());
@@ -195,14 +210,11 @@ public class ActionService {
     }
 
     public void delete(Long id) {
-        // Vérifier si une entité avec l'identifiant donné existe
-        // si référentiel.n'existePasParId(id) alors
-        // lever une exception "Ressource non trouvée avec cet id"
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Action not found with id: " + id);
-        }
-        // Supprimer l'entité par son identifiant
-        // référentiel.supprimerParId(id)
+        ActionEntity entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Action not found with id: " + id));
+
+        checkOwnership(entity);
+
         repository.deleteById(id);
     }
 }
