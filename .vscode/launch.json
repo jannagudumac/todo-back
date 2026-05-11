@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend: Spring Boot",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.descodeuses.planit.PlanitApplication",
+      "projectName": "planit",
+      "args": "--spring.profiles.active=docker",
+      "env": {
+        "DB_URL": "jdbc:postgresql://localhost:5432/descodeuses",
+        "DB_USERNAME": "postgres",
+        "DB_PASSWORD": "postgres",
+        "MONGO_URI": "mongodb://localhost:27017",
+        "MONGO_DB": "mydb",
+        "CORS": "http://localhost:4200"
+      },
+      "preLaunchTask": "db:start"
+    },
+    {
+      "name": "Frontend: Angular",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm start",
+      "cwd": "${workspaceFolder}/../todo-front"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Todo App: Launch All",
+      "configurations": [
+        "Backend: Spring Boot",
+        "Frontend: Angular"
+      ],
+      "stopAll": true
+    }
+  ]
+}

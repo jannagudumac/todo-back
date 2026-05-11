@@ -37,3 +37,27 @@ Application complète de gestion de tâches avec **frontend (Angular)** et **bac
 * **Backend** : Java Spring Boot, Spring Security, PostgreSQL, MongoDB, Talsma UMLDoclet, Bcrypt Generator
 
 [🌐 Démo live](https://todo-front25.netlify.app) &nbsp;&nbsp; [💻 Code source front](https://github.com/jannagudumac/todo-front) &nbsp;&nbsp; [💻 Code source back](https://github.com/jannagudumac/todo-back)
+
+### **Lancement local rapide avec VS Code**
+
+J'ai ajouté une config simple pour lancer tout le projet sans tout démarrer à la main :
+
+* `compose.dev.yml` démarre **PostgreSQL** et **MongoDB**
+* `.vscode/launch.json` lance le **backend Spring Boot** et le **frontend Angular**
+* `.vscode/tasks.json` gère le démarrage et l'arrêt des bases
+
+Depuis VS Code :
+
+1. Ouvre le dossier `todo-back`
+2. Va dans l'onglet **Run and Debug**
+3. Lance **`Todo App: Launch All`**
+
+Le backend démarrera avec le profil `docker`, en utilisant :
+
+* PostgreSQL : `localhost:5432`
+* MongoDB : `localhost:27017`
+* Frontend : `http://localhost:4200`
+
+Pour arrêter les bases ensuite, lance la tâche VS Code **`db:stop`**.
+
+Note : cette config suppose que le frontend est dans le dossier frère `../todo-front`.
