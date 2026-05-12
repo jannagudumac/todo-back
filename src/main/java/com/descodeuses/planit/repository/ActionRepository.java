@@ -13,5 +13,6 @@ import com.descodeuses.planit.entity.UtilisateurEntity;
 //TYPE ID OBJET = Type du champ id = Long
 @Repository
 public interface ActionRepository extends JpaRepository<ActionEntity, Long> {
-    List<ActionEntity> findByUser(UtilisateurEntity user); //latest addition
+    List<ActionEntity> findByUser(UtilisateurEntity user);
+    List<ActionEntity> findByProjetId(Long projetId);
 }

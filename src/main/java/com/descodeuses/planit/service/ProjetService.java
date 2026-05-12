@@ -21,7 +21,10 @@ public class ProjetService {
 
     // Convert Entity to DTO
     private ProjetDTO convertToDTO(ProjetEntity projet) {
-        return new ProjetDTO(projet.getId(), projet.getTitle());
+        ProjetDTO dto = new ProjetDTO(projet.getId(), projet.getTitle());
+        dto.setDescription(projet.getDescription());
+        dto.setDeadline(projet.getDeadline());
+        return dto;
     }
 
     // Convert DTO to Entity
@@ -31,6 +34,8 @@ public class ProjetService {
             projet.setId(dto.getId());
         }
         projet.setTitle(dto.getTitle());
+        projet.setDescription(dto.getDescription());
+        projet.setDeadline(dto.getDeadline());
         return projet;
     }
 
@@ -63,6 +68,8 @@ public class ProjetService {
         ProjetEntity projet = projetRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Projet not found with id: " + id));
         projet.setTitle(dto.getTitle());
+        projet.setDescription(dto.getDescription());
+        projet.setDeadline(dto.getDeadline());
         ProjetEntity updated = projetRepository.save(projet);
         return convertToDTO(updated);
     }

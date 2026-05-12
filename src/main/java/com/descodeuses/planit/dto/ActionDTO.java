@@ -3,12 +3,14 @@ package com.descodeuses.planit.dto;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.descodeuses.planit.entity.TaskStatus;
 
 public class ActionDTO {
 
     private Long id;
     private String title;
     private boolean completed;
+    private TaskStatus status;
     private LocalDate dueDate;
     private Set<Long> memberIds;
     private Long projetId;
@@ -16,6 +18,14 @@ public class ActionDTO {
     private String description;
     private Long userId;
  
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 
     public Long getUserId() {
         return userId;

@@ -60,4 +60,9 @@ public class ActionController {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/projet/{projetId}")
+    public ResponseEntity<List<ActionDTO>> getByProjet(@PathVariable Long projetId) {
+        return ResponseEntity.ok(service.getByProjet(projetId));
+    }
 }

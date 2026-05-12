@@ -16,6 +16,7 @@ import com.descodeuses.planit.dto.ActionDTO;
 import com.descodeuses.planit.entity.ActionEntity;
 import com.descodeuses.planit.entity.ContactEntity;
 import com.descodeuses.planit.entity.ProjetEntity;
+import com.descodeuses.planit.entity.TaskStatus;
 import com.descodeuses.planit.entity.UtilisateurEntity;
 import com.descodeuses.planit.repository.ActionRepository;
 import com.descodeuses.planit.repository.ContactRepository;
@@ -67,6 +68,8 @@ public class ActionService {
                 action.getDescription(),
                 action.getPriority());
 
+        dto.setStatus(action.getStatus() != null ? action.getStatus() : TaskStatus.TODO);
+
         Set<Long> memberIds = action.getMembers().stream()
                 .map(ContactEntity::getId)
                 .collect(Collectors.toSet());
@@ -86,6 +89,7 @@ public class ActionService {
         action.setMembers(members);
         action.setPriority(actionDTO.getPriority());
         action.setDescription(actionDTO.getDescription());
+        action.setStatus(actionDTO.getStatus() != null ? actionDTO.getStatus() : TaskStatus.TODO);
 
         if (actionDTO.getProjetId() != null) {
             ProjetEntity projet = projetRepository.findById(actionDTO.getProjetId())
@@ -188,6 +192,7 @@ public class ActionService {
         existingEntity.setDueDate(dto.getDueDate());
         existingEntity.setPriority(dto.getPriority());
         existingEntity.setDescription(dto.getDescription());
+        existingEntity.setStatus(dto.getStatus() != null ? dto.getStatus() : TaskStatus.TODO);
 
         Set<ContactEntity> contacts = new HashSet<>(contactRepository.findAllById(dto.getMemberIds())); // récupérer les
                                                                                                         // bons membres
@@ -216,6 +221,15 @@ public class ActionService {
         checkOwnership(entity);
 
         repository.deleteById(id);
+    }
+
+    public List<ActionDTO> getByProjet(Long projetId) {
+        List<ActionEntity> entities = repository.findByProjetId(projetId);
+        List<ActionDTO> dtos = new ArrayList<>();
+        for (ActionEntity action : entities) {
+            dtos.add(convertToDTO(action));
+        }
+        return dtos;
     }
 }
 

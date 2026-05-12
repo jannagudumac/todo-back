@@ -1,5 +1,6 @@
 package com.descodeuses.planit.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,10 @@ public class ProjetEntity {
     @Column(nullable = false)
     private String title;
 
+    private String description;
+
+    private LocalDate deadline;
+
     public String getTitle() {
         return title;
     }
@@ -37,6 +42,23 @@ public class ProjetEntity {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
     //CONNECTION
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActionEntity> actions = new ArrayList<>();

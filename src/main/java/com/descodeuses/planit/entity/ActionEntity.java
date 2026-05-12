@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +30,18 @@ public class ActionEntity {
     private String title;
 
     private boolean completed;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TaskStatus status;
+
+    public TaskStatus getStatus() {
+        return status != null ? status : TaskStatus.TODO;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 
     private LocalDate dueDate;
 
